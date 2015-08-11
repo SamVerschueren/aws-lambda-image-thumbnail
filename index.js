@@ -9,7 +9,7 @@
 
 // module dependencies
 var AWS = require('aws-sdk'),
-    gm = require('gm').subClass({ imageMagick: true }),
+    //gm = require('gm').subClass({ imageMagick: true }),
     util = require('util');
 
 // Create a new S3 object
