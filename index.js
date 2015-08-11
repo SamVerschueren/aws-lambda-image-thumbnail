@@ -105,7 +105,7 @@ exports.handler = function(event, context) {
                     y = (size.height / 2) - (square / 2);
                 
                 // Extract the middle square and resize to the SIZE defined
-                gm(img).crop(square, square, x, y).resize(SIZE, SIZE).toBuffer(function(err, buffer) {
+                gm(img).crop(square, square, x, y).resize(SIZE, SIZE).autoOrient().toBuffer(function(err, buffer) {
                     if(err) {
                         // Reject the promise if an error occurred
                         return reject(err);
