@@ -10,7 +10,6 @@
 // module dependencies
 var AWS = require('aws-sdk'),
     gm = require('gm').subClass({ imageMagick: true }),
-    mime = require('mime'),
     util = require('util'),
     Q = require('q');
 
@@ -30,44 +29,30 @@ var SIZE = 150,
 exports.handler = function(event, context) {
     var bucket = event.Records[0].s3.bucket.name,
         source = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
-        
-    console.log(source);
     
-    Q.fcall(function() {
-        // First test the image type
-        var mimetype = mime.lookup(source);
-        
-        if(WHITELIST.indexOf(mimetype) === -1) {
-            // If the mimetype is not in the whitelist, throw an error
-            throw new TypeError('The type of the file is not correct.');
-        }
-        
+    Q.fcall(function() {        
         // Retrieve the object
         return getObject({Bucket: bucket, Key: source});
     }).then(function(response) {
-        console.log(response);
+        if(WHITELIST.indexOf(response.ContentType) === -1) {
+            // If the mimetype is not in the whitelist, throw an error
+            throw new TypeError('This type of file could not be converted.');
+        }
         
         // Scale and crop the image
         return [response.ContentType, scale(response.Body)];
     }).spread(function(contentType, buffer) {
+        // Determine the destination of the thumbnail
         var dest = source.split('/');
         dest.shift();
         dest.unshift('thumbs');
         
-        var key = dest.join('/');
-        
-        console.log({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
-        
         // Store the image and the correct location
-        return putObject({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
+        return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType});
     }).then(function() {
-        console.log('Should be stored');
-        
         // Everything went well
         context.succeed();
     }).catch(function(err) {
-        console.log('Something went wrong');
-        
         // Log the error
         console.error(err);
         
@@ -95,15 +80,9 @@ exports.handler = function(event, context) {
             // Retrieve the object
             s3.putObject(obj, function(err, result) {
                 if(err) {
-                    console.log('failed to put');
-                    console.log(err);
-                    
                     // Reject because something went wrong
                     return reject(err);
                 }
-                
-                console.log('put ok');
-                console.log(result);
                 
                 // We retrieved the object successfully
                 resolve(result);
