@@ -45,6 +45,8 @@ exports.handler = function(event, context) {
         // Retrieve the object
         return getObject({Bucket: bucket, Key: source});
     }).then(function(response) {
+        console.log(response);
+        
         // Scale and crop the image
         return [response.ContentType, scale(response.Body)];
     }).spread(function(contentType, buffer) {
@@ -93,6 +95,9 @@ exports.handler = function(event, context) {
             // Retrieve the object
             s3.putObject(obj, function(err, result) {
                 if(err) {
+                    console.log('failed to put');
+                    console.log(err);
+                    
                     // Reject because something went wrong
                     return reject(err);
                 }
