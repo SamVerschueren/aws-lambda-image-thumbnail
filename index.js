@@ -59,9 +59,13 @@ exports.handler = function(event, context) {
         // Store the image and the correct location
         return putObject({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
     }).then(function() {
+        console.log('Should be stored');
+        
         // Everything went well
         context.succeed();
     }).catch(function(err) {
+        console.log('Something went wrong');
+        
         // Log the error
         console.error(err);
         
