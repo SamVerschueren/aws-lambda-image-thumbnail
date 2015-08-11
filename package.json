@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-image-thumbnail",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Microservice that generates a thumbnail when an image is uploaded to an S3 bucket.",
   "main": "index.js",
   "scripts": {
