@@ -33,10 +33,6 @@ exports.handler = function(event, context) {
         
     console.log(source);
     
-    // Nodeify the S3 calls
-    var getObject = Q.denodeify(s3.getObject),
-        putObject = Q.denodeify(s3.putObject);
-    
     Q.fcall(function() {
         // First test the image type
         var mimetype = mime.lookup(source);
@@ -55,12 +51,13 @@ exports.handler = function(event, context) {
         var dest = source.split('/');
         dest.shift();
         dest.unshift('thumbs');
-        dest = dest.join('/');
         
-        console.log(dest);
+        var key = dest.join('/');
+        
+        console.log(key);
         
         // Store the image and the correct location
-        return putObject({Bucket: bucket, Key: dest, Body: buffer, ContentType: contentType});
+        return putObject({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
     }).then(function() {
         // Everything went well
         context.succeed();
@@ -71,6 +68,36 @@ exports.handler = function(event, context) {
         // Let the function fail
         context.fail(err);  
     });
+    
+    function getObject(obj) {
+        return Q(function(resolve, reject) {
+            // Retrieve the object
+            s3.getObject(obj, function(err, result) {
+                if(err) {
+                    // Reject because something went wrong
+                    return reject(err);
+                } 
+                
+                // We retrieved the object successfully
+                resolve(result);
+            });
+        });
+    };
+    
+    function putObject(obj) {
+        return Q(function(resolve, reject) {
+            // Retrieve the object
+            s3.putObject(obj, function(err, result) {
+                if(err) {
+                    // Reject because something went wrong
+                    return reject(err);
+                } 
+                
+                // We retrieved the object successfully
+                resolve(result);
+            });
+        });
+    };
     
     function scale(img) {
         return Q(function(resolve, reject) {
