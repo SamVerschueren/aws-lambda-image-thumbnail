@@ -4,12 +4,14 @@
   "description": "Microservice that generates a thumbnail when an image is uploaded to an S3 bucket.",
   "main": "index.js",
   "dependencies": {
+    "gm": "^1.18.1",
+    "gulp": "^3.9.0",
     "gulp-zip": "^3.0.2",
-    "gulp": "^3.9.0"
+    "mime": "^1.3.4",
+    "q": "^1.4.1"
   },
   "devDependencies": {
-    "aws-sdk": "^2.1.44",
-    "gm": "^1.18.1"
+    "aws-sdk": "^2.1.44"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
