@@ -76,7 +76,7 @@ exports.handler = function(event, context) {
     });
     
     function getObject(obj) {
-        return Q(function(resolve, reject) {
+        return Q.Promise(function(resolve, reject) {
             // Retrieve the object
             s3.getObject(obj, function(err, result) {
                 if(err) {
@@ -91,7 +91,7 @@ exports.handler = function(event, context) {
     };
     
     function putObject(obj) {
-        return Q(function(resolve, reject) {
+        return Q.Promise(function(resolve, reject) {
             // Retrieve the object
             s3.putObject(obj, function(err, result) {
                 if(err) {
@@ -112,7 +112,7 @@ exports.handler = function(event, context) {
     };
     
     function scale(img) {
-        return Q(function(resolve, reject) {
+        return Q.Promise(function(resolve, reject) {
             // Retrieve the size of the img
             gm(img).size(function(err, size) {
                 if(err) {
