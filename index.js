@@ -54,7 +54,7 @@ exports.handler = function(event, context) {
         
         var key = dest.join('/');
         
-        console.log(key);
+        console.log({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
         
         // Store the image and the correct location
         return putObject({Bucket: bucket, Key: key, Body: buffer, ContentType: contentType});
@@ -95,7 +95,10 @@ exports.handler = function(event, context) {
                 if(err) {
                     // Reject because something went wrong
                     return reject(err);
-                } 
+                }
+                
+                console.log('put ok');
+                console.log(result);
                 
                 // We retrieved the object successfully
                 resolve(result);
