@@ -18,6 +18,7 @@ var s3 = new AWS.S3();
 
 // Generate a 150x150 square image
 var SIZE = 150,
+    DEST_DIR = 'thumbs',
     WHITELIST = ['image/jpeg', 'image/jpg', 'image/png'];
 
 /**
@@ -45,7 +46,7 @@ exports.handler = function(event, context) {
         // Determine the destination of the thumbnail
         var dest = source.split('/');
         dest.shift();
-        dest.unshift('thumbs');
+        dest.unshift(DEST_DIR);
         
         // Store the image and the correct location
         return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType});
