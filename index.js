@@ -36,8 +36,11 @@ exports.handler = function(event, context) {
         return getObject({Bucket: bucket, Key: source});
     }).then(function(response) {
         if(WHITELIST.indexOf(response.ContentType.split(';').shift()) === -1) {
-            // If the mimetype is not in the whitelist, throw an error
-            throw new TypeError('This type of file could not be converted.');
+            // Log the error
+            console.error(response.ContentType + ' could not be parsed');
+            
+            // If the mimetype is not in the whitelist, pass it to the following step
+            return [response.ContentType, response.Body];
         }
         
         // Scale and crop the image
