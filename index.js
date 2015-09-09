@@ -48,7 +48,6 @@ exports.handler = function(event, context) {
     }).spread(function(contentType, buffer) {
         // Determine the destination of the thumbnail
         var dest = source.split('/');
-        dest.shift();
         dest.unshift(DEST_DIR);
         
         // Store the image and the correct location
