@@ -51,7 +51,7 @@ exports.handler = function(event, context) {
         dest.unshift(DEST_DIR);
         
         // Store the image and the correct location
-        return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType});
+        return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType, ACL:'public-read'});
     }).then(function() {
         // Everything went well
         context.succeed();
