@@ -48,11 +48,10 @@ exports.handler = function(event, context) {
     }).spread(function(contentType, buffer) {
         // Determine the destination of the thumbnail
         var dest = source.split('/');
-        dest.shift();
         dest.unshift(DEST_DIR);
         
         // Store the image and the correct location
-        return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType});
+        return putObject({Bucket: bucket, Key: dest.join('/'), Body: buffer, ContentType: contentType, ACL:'public-read'});
     }).then(function() {
         // Everything went well
         context.succeed();
